@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>90 Dias 💖</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9ecf, #ffcce6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-width: 600px;
+    z-index: 2;
+}
+
+h1 {
+    color: #ff4da6;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#sim {
+    background-color: #ff4da6;
+    color: white;
+}
+
+#nao {
+    background-color: #ccc;
+}
+
+img {
+    width: 320px;
+    margin-top: 20px;
+    border-radius: 15px;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fogos"></canvas>
+
+<div class="container" id="conteudo">
+    <h1>Quer namorar comigo? 💖</h1>
+    <button id="sim">Sim 😍</button>
+    <button id="nao">Não 😅</button>
+    <p id="mensagem"></p>
+</div>
+
+<!-- Áudios -->
+<audio id="musicaSim" src="kauejurandirazevedo-careless-whisper.mp3"></audio>
+<audio id="musicaNao" src="potthyraleite-3-potthyra-leite-a-musica-mais-triste-do-ano-0bb2c121.mp3"></audio>
+
+<script>
+
+let contadorNao = 0;
+
+const botaoSim = document.getElementById("sim");
+const botaoNao = document.getElementById("nao");
+const conteudo = document.getElementById("conteudo");
+const mensagem = document.getElementById("mensagem");
+const musicaSim = document.getElementById("musicaSim");
+const musicaNao = document.getElementById("musicaNao");
+
+/* ========================= */
+/* BOTÃO SIM */
+/* ========================= */
+
+botaoSim.addEventListener("click", function() {
+
+    musicaSim.play();
+
+    conteudo.innerHTML = `
+        <h1>🥰</h1>
+        <p>
+        Obrigada por ser luz pra mim durante esses 90 dias,<br><br>
+        vc é um homem incrível e quero construir coisas incríveis ao seu lado,<br><br>
+        espero poder viver meus sonhos segurando sua mão ✨
+        </p>
+        <img src="iloveilove.png" alt="Nossa foto">
+    `;
+
+    iniciarFogos();
+});
+
+
+/* ========================= */
+/* BOTÃO NÃO */
+/* ========================= */
+
+botaoNao.addEventListener("click", function() {
+
+    contadorNao++;
+
+    if (contadorNao === 1) {
+        moverBotao();
+    }
+
+    else if (contadorNao === 2) {
+        mensagem.innerText = "SELOKO PARÇA TA VIAJANDO? TENTA DNOVO";
+        moverBotao();
+    }
+
+    else if (contadorNao === 3) {
+        musicaNao.play();
+
+        conteudo.innerHTML = `
+            <h1>👺</h1>
+            <img src="big-monke-flips-you-off-what-u-do-v0-861gk9gqka0c1.png" width="350">
+        `;
+    }
+
+});
+
+
+function moverBotao() {
+    const largura = window.innerWidth - 100;
+    const altura = window.innerHeight - 100;
+
+    botaoNao.style.position = "absolute";
+    botaoNao.style.left = Math.random() * largura + "px";
+    botaoNao.style.top = Math.random() * altura + "px";
+}
+
+
+/* ========================= */
+/* FOGOS DE ARTIFÍCIO */
+/* ========================= */
+
+const canvas = document.getElementById("fogos");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function iniciarFogos() {
+    setInterval(criarExplosao, 700);
+    animate();
+}
+
+function criarExplosao() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height / 2;
+
+    for (let i = 0; i < 60; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            angle: Math.random() * 2 * Math.PI,
+            speed: Math.random() * 6 + 2,
+            radius: 2 + Math.random()*2
+        });
+    }
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    ctx.fillStyle = "rgba(0,0,0,0.15)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p, index) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.speed *= 0.96;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = `hsl(${Math.random()*360},100%,60%)`;
+        ctx.fill();
+
+        if (p.speed < 0.5) {
+            particles.splice(index,1);
+        }
+    });
+}
+
+</script>
+
+</body>
+</html>
